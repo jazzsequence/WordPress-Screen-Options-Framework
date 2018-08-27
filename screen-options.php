@@ -48,6 +48,13 @@ class WordPressScreenOptionsFramework {
 	private static $instance = null;
 
 	/**
+	 * The name of your admin page.
+	 *
+	 * @var string
+	 */
+	public static $admin_page = 'toplevel_page_screen_options_demo_page';
+
+	/**
 	 * Creates or returns an instance of this class.
 	 *
 	 * @since  1.0.0
@@ -64,8 +71,78 @@ class WordPressScreenOptionsFramework {
 	/**
 	 * Class constructor.
 	 */
-	private function __construct() {}
+	private function __construct() {
+		$admin_page = self::$admin_page;
 
+		add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
+
+	/**
+	 * Adds an admin page.
+	 */
+	public function add_admin_page() {
+		add_menu_page(
+			esc_html__( 'WordPress Screen Options Demo Page', 'wordpress-screen-options-demo' ), // Admin page title.
+			esc_html__( 'Screen Options Demo', 'wordpress-screen-options-demo' ), // Menu title.
+			'manage_options', // Capability.
+			'screen_options_demo_page', // Page slug.
+			[ $this, 'admin_page' ], // Callback function.
+			'dashicons-lightbulb', // Icon.
+			15 // Position.
+		);
+	}
+
+	/**
+	 * Renders the admin page.
+	 */
+	public function admin_page() {
+		$screen    = get_current_screen();
+		$parent    = get_admin_page_parent();
+		$user_meta = get_usermeta( get_current_user_id(), 'wordpress_screen_options_demo_options' );
+		?>
+		<div class="wrap <?php echo esc_attr( $parent ); ?>">
+			<h1><?php echo esc_attr( get_admin_page_title() ); ?></h1>
+
+			<div class="notice notice-info is-dismissable">
+				<p>
+					<?php
+					// Translators: %s is the URL to the GitHub repository.
+					echo wp_kses_post( sprintf( __( 'This is a demonstration of the Screen Options framework. More information can be found at <a href="%s">the GitHub repo</a>. Click on the Screen Options tab in the upper right hand corner of the page to test the screen options.', 'wordpress-screen-options-demo' ), 'https://github.com/jazzsequence/WordPress-Screen-Options-Framework' ) );
+					?>
+				</p>
+			</div> <!-- .notice -->
+		</div> <!-- .<?php echo esc_attr( $parent ); ?> -->
+		<div class="<?php echo esc_attr( $parent ); ?>-body">
+			<h2><?php esc_html_e( 'Screen option values', 'wordpress-screen-options-demo' ); ?></h2>
+			<div class="description">
+				<?php if ( $user_meta ) : ?>
+					<p>
+						<?php esc_html_e( 'Screen Options have been saved to user meta. Displaying the user settings below.', 'wordpress-screen-options-demo' ); ?>
+					</p>
+				<?php else : ?>
+					<p>
+						<?php esc_html_e( 'Screen Options have not yet been saved for this user. Displaying the default settings below.', 'wordpress-screen-options-demo' ); ?>
+					</p>
+				<?php endif; ?>
+			</div>
+			<ul class="screen-options-list">
+				<?php
+				foreach ( $this->options() as $option_name ) {
+					$option     = "wordpress_screen_options_demo_$option_name";
+					if ( $user_meta ) {
+						$user_value = isset( $user_meta[ $option_name ] ) ? 'true' : 'false';
+					} else {
+						$user_value = var_export( $screen->get_option( $option, 'value' ), true );
+					}
+					?>
+					<li class="<?php echo esc_attr( $option_name ); ?>-option">
+						<strong><?php echo esc_attr( ucwords( $option_name ) ); ?>:</strong> <code><?php echo esc_html( $user_value ); ?></code>
+					</li>
+				<?php } ?>
+			</ul>
+		</div>
+		<?php
+
+	}
 }
 
 add_action( 'plugins_loaded', array( 'WordPressScreenOptionsFramework', 'get_instance' ) );
