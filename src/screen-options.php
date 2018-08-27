@@ -192,7 +192,7 @@ class WordPressScreenOptionsFramework {
 	public function set_option( $status, $option, $value ) {
 		if ( isset( $_POST['wp_screen_options_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wp_screen_options_nonce'] ) ), 'wp_screen_options_nonce' ) ) {
 			if ( 'wordpress_screen_options_demo_options' === $option ) {
-				$value = isset( $_POST['wordpress_screen_options_demo'] ) && is_array( $_POST['wordpress_screen_options_demo'] ) ? $_POST['wordpress_screen_options_demo'] : $value; // WPCS: Sanitization ok.
+				$value = isset( $_POST['wordpress_screen_options_demo'] ) && is_array( $_POST['wordpress_screen_options_demo'] ) ? $_POST['wordpress_screen_options_demo'] : []; // WPCS: Sanitization ok.
 			}
 		}
 

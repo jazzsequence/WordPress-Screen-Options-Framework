@@ -194,7 +194,7 @@ class ${1:ScreenOptionsClass} {
 	public function set_option( \$status, \$option, \$value ) {
 		if ( isset( \$_POST['${5:nonce_name}'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( \$_POST['${5:nonce_name}'] ) ), '${5:nonce_name}' ) ) {
 			if ( '${4:option_identifier}_options' === \$option ) {
-				\$value = isset( \$_POST['${4:option_identifier}'] ) && is_array( \$_POST['${4:option_identifier}'] ) ? \$_POST['${4:option_identifier}'] : \$value; // WPCS: Sanitization ok.
+				\$value = isset( \$_POST['${4:option_identifier}'] ) && is_array( \$_POST['${4:option_identifier}'] ) ? \$_POST['${4:option_identifier}'] : []; // WPCS: Sanitization ok.
 			}
 		}
 
