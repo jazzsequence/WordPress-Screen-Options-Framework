@@ -1,12 +1,16 @@
 <?php
 /**
- * WordPress Screen Options Framework
- *
- * Boilerplate framework for building and extending Screen Options in the WordPress admin.
+ * Plugin Name: WordPress Screen Options Framework
+ * Description: A plugin to demo a framework for building and extending Screen Options in the WordPress admin.
+ * Plugin URI: https://github.com/jazzsequence/WordPress-Screen-Options-Framework
+ * Author: Chris Reynolds
+ * Author URI: https://chrisreynolds.io
+ * Version: 1.0.0
+ * License: GPL3
+ * Text Domain: wordpress-screen-options-demo
  *
  * @author  Chris Reynolds <chris@hmn.md>
  * @package WordPressScreenOptionsFramework
- * @version 1.0.0
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html
  */
 
