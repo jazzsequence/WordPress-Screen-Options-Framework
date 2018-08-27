@@ -77,6 +77,19 @@ class WordPressScreenOptionsFramework {
 		add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
 
 	/**
+	 * Return an array of options. Replace this with your own options, structured however you like.
+	 *
+	 * @return array An array of fake options.
+	 */
+	private function options() {
+		return [
+			'foo',
+			'bar',
+			'baz',
+		];
+	}
+
+	/**
 	 * Adds an admin page.
 	 */
 	public function add_admin_page() {
