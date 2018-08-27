@@ -76,6 +76,7 @@ class WordPressScreenOptionsFramework {
 
 		add_action( "load-$admin_page", [ $this, 'get_screen_options' ] );
 		add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
+		add_filter( 'screen_settings', [ $this, 'show_screen_options' ], 10, 2 );
 
 	/**
 	 * Return an array of options. Replace this with your own options, structured however you like.
@@ -249,6 +250,29 @@ class WordPressScreenOptionsFramework {
 		<label for="<?php echo esc_textarea( $id ); ?>"><input type="checkbox" name="wordpress_screen_options_demo[<?php echo esc_textarea( $option ); ?>]" class="wordpress-screen-options-demo" id="<?php echo esc_textarea( $id ); ?>" <?php echo esc_textarea( $checked ); ?> /> <?php echo esc_html( $title ); ?></label>
 
 		<?php
+	}
+
+	/**
+	 * Render the screen options block.
+	 *
+	 * @param  string $status The screen options markup.
+	 * @param  object $args   An object of screen options data.
+	 * @return string         The filtered screen options block.
+	 */
+	public function show_screen_options( $status, $args ) {
+		if ( self::$admin_page !== $args->base ) {
+			return $status;
+		}
+
+		ob_start();
+
+		$this->before();
+		foreach ( $this->screen_options() as $screen_option ) {
+			$this->show_option( $screen_option['title'], $screen_option['option'] );
+		}
+		$this->after();
+
+		return ob_get_clean();
 	}
 }
 
