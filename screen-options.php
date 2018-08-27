@@ -77,6 +77,8 @@ class WordPressScreenOptionsFramework {
 		add_action( "load-$admin_page", [ $this, 'get_screen_options' ] );
 		add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
 		add_filter( 'screen_settings', [ $this, 'show_screen_options' ], 10, 2 );
+		add_filter( 'set-screen-option', [ $this, 'set_option' ], 11, 3 );
+	}
 
 	/**
 	 * Return an array of options. Replace this with your own options, structured however you like.
@@ -273,6 +275,23 @@ class WordPressScreenOptionsFramework {
 		$this->after();
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Save the screen option setting.
+	 *
+	 * @param string $status No idea. Not used. No one can tell me what it does.
+	 * @param string $option The option name.
+	 * @param array  $value  Whatever option you're setting.
+	 */
+	public function set_option( $status, $option, $value ) {
+		if ( isset( $_POST['wp_screen_options_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wp_screen_options_nonce'] ) ), 'wp_screen_options_nonce' ) ) {
+			if ( 'wordpress_screen_options_demo_options' === $option ) {
+				$value = isset( $_POST['wordpress_screen_options_demo'] ) && is_array( $_POST['wordpress_screen_options_demo'] ) ? $_POST['wordpress_screen_options_demo'] : []; // WPCS: Sanitization ok.
+			}
+		}
+
+		return $value;
 	}
 }
 
