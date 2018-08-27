@@ -195,6 +195,61 @@ class WordPressScreenOptionsFramework {
 		<?php
 
 	}
+
+	/**
+	 * The HTML markup to wrap around each option.
+	 */
+	public function before() {
+		?>
+		<fieldset>
+			<input type="hidden" name="wp_screen_options_nonce" value="<?php echo esc_textarea( wp_create_nonce( 'wp_screen_options_nonce' ) ); ?>">
+			<legend><?php esc_html_e( 'WordPress Screen Options Demo', 'wp-screen-options-framework' ); ?></legend>
+			<div class="metabox-prefs">
+				<div><input type="hidden" name="wp_screen_options[option]" value="wordpress_screen_options_demo_options" /></div>
+				<div><input type="hidden" name="wp_screen_options[value]" value="yes" /></div>
+				<div class="wordpress_screen_options_demo_custom_fields">
+		<?php
+	}
+
+	/**
+	 * The HTML markup to close the options.
+	 */
+	public function after() {
+		$button = get_submit_button( __( 'Apply', 'wp-screen-options-framework' ), 'button', 'screen-options-apply', false );
+		?>
+				</div><!-- wordpress_screen_options_demo_custom_fields -->
+			</div><!-- metabox-prefs -->
+		</fieldset>
+		<br class="clear">
+		<?php
+		echo $button; // WPCS: XSS ok.
+	}
+
+	/**
+	 * Display a screen option.
+	 *
+	 * @param  string $title  The title to display.
+	 * @param  string $option The name of the option we're displaying.
+	 */
+	public function show_option( $title, $option ) {
+		$screen    = get_current_screen();
+		$id        = "wordpress_screen_options_demo_$option";
+		$default   = $screen->get_option( $id, 'value' );
+		$user_meta = get_usermeta( get_current_user_id(), 'wordpress_screen_options_demo_options' );
+
+		// Check if the screen options have been saved. If so, use the saved value. Otherwise, use the default values.
+		if ( $user_meta ) {
+			$checked = array_key_exists( $option, $user_meta ) ? 'checked="checked"' : '';
+		} else {
+			$checked = $screen->get_option( $id, 'value' ) ? 'checked="checked"' : '';
+		}
+
+		?>
+
+		<label for="<?php echo esc_textarea( $id ); ?>"><input type="checkbox" name="wordpress_screen_options_demo[<?php echo esc_textarea( $option ); ?>]" class="wordpress-screen-options-demo" id="<?php echo esc_textarea( $id ); ?>" <?php echo esc_textarea( $checked ); ?> /> <?php echo esc_html( $title ); ?></label>
+
+		<?php
+	}
 }
 
 add_action( 'plugins_loaded', array( 'WordPressScreenOptionsFramework', 'get_instance' ) );
