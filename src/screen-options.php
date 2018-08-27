@@ -144,7 +144,6 @@ class WordPressScreenOptionsFramework {
 	public function show_option( $title, $option ) {
 		$screen    = get_current_screen();
 		$id        = "wordpress_screen_options_demo_$option";
-		$default   = $screen->get_option( $id, 'value' );
 		$user_meta = get_usermeta( get_current_user_id(), 'wordpress_screen_options_demo_options' );
 
 		// Check if the screen options have been saved. If so, use the saved value. Otherwise, use the default values.
