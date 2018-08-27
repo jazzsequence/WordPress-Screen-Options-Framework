@@ -100,7 +100,6 @@ class WordPressScreenOptionsFramework {
 		foreach ( WordPressScreenOptionsDemo::get_instance()->options() as $option_name ) {
 			add_screen_option( "wordpress_screen_options_demo_$option_name", [
 				'option'  => $option_name,
-				'default' => true,
 				'value'   => true,
 			] );
 		}
