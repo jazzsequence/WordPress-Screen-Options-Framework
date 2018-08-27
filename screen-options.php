@@ -74,6 +74,7 @@ class WordPressScreenOptionsFramework {
 	private function __construct() {
 		$admin_page = self::$admin_page;
 
+		add_action( "load-$admin_page", [ $this, 'get_screen_options' ] );
 		add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
 
 	/**
@@ -106,6 +107,27 @@ class WordPressScreenOptionsFramework {
 
 		return $screen_options;
 	}
+
+	/**
+	 * Register the screen options.
+	 */
+	public function get_screen_options() {
+		$screen = get_current_screen();
+
+		if ( ! is_object( $screen ) || $screen->id !== self::$admin_page ) {
+			return;
+		}
+
+		// Loop through all the options and add a screen option for each.
+		foreach ( $this->options() as $option_name ) {
+			add_screen_option( "wordpress_screen_options_demo_$option_name", [
+				'option'  => $option_name,
+				'default' => true,
+				'value'   => true,
+			] );
+		}
+	}
+
 	/**
 	 * Adds an admin page.
 	 */
