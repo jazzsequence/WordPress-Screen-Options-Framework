@@ -90,6 +90,23 @@ class WordPressScreenOptionsFramework {
 	}
 
 	/**
+	 * Array of screen options to display.
+	 *
+	 * @return array The screen option function names.
+	 */
+	private function screen_options() {
+		$screen_options = [];
+
+		foreach ( $this->options() as $option_name ) {
+			$screen_options[] = [
+				'option' => $option_name,
+				'title'  => ucwords( $option_name ),
+			];
+		}
+
+		return $screen_options;
+	}
+	/**
 	 * Adds an admin page.
 	 */
 	public function add_admin_page() {
