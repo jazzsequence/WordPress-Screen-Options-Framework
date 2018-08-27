@@ -4,6 +4,7 @@
  *
  * Boilerplate include for extending and creating Screen Options in the WordPress admin.
  *
+ * @version 1.0.0
  * @author  Chris Reynolds <chris@hmn.md>
  * @package WordPressScreenOptionsFramework
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html
