@@ -1,13 +1,8 @@
 <?php
 /**
- * Plugin Name: WordPress Screen Options Framework
- * Description: A plugin to demo a framework for building and extending Screen Options in the WordPress admin.
- * Plugin URI: https://github.com/jazzsequence/WordPress-Screen-Options-Framework
- * Author: Chris Reynolds
- * Author URI: https://chrisreynolds.io
- * Version: 1.0.0
- * License: GPL3
- * Text Domain: wordpress-screen-options-demo
+ * WordPress Screen Options Framework
+ *
+ * Boilerplate include for extending and creating Screen Options in the WordPress admin.
  *
  * @author  Chris Reynolds <chris@hmn.md>
  * @package WordPressScreenOptionsFramework
@@ -41,18 +36,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WordPressScreenOptionsFramework {
 
 	/**
-	 * Singleton class instance.
+	 * The class instance.
 	 *
 	 * @var null
 	 */
 	private static $instance = null;
-
-	/**
-	 * The name of your admin page.
-	 *
-	 * @var string
-	 */
-	public static $admin_page = 'toplevel_page_screen_options_demo_page';
 
 	/**
 	 * Creates or returns an instance of this class.
@@ -69,28 +57,14 @@ class WordPressScreenOptionsFramework {
 	}
 
 	/**
-	 * Class constructor.
+	 * The class constructor.
 	 */
 	private function __construct() {
-		$admin_page = self::$admin_page;
+		$admin_page = WordPressScreenOptionsDemo::$admin_page;
 
 		add_action( "load-$admin_page", [ $this, 'get_screen_options' ] );
-		add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
 		add_filter( 'screen_settings', [ $this, 'show_screen_options' ], 10, 2 );
 		add_filter( 'set-screen-option', [ $this, 'set_option' ], 11, 3 );
-	}
-
-	/**
-	 * Return an array of options. Replace this with your own options, structured however you like.
-	 *
-	 * @return array An array of fake options.
-	 */
-	private function options() {
-		return [
-			'foo',
-			'bar',
-			'baz',
-		];
 	}
 
 	/**
@@ -101,7 +75,7 @@ class WordPressScreenOptionsFramework {
 	private function screen_options() {
 		$screen_options = [];
 
-		foreach ( $this->options() as $option_name ) {
+		foreach ( WordPressScreenOptionsDemo::get_instance()->options() as $option_name ) {
 			$screen_options[] = [
 				'option' => $option_name,
 				'title'  => ucwords( $option_name ),
@@ -117,86 +91,18 @@ class WordPressScreenOptionsFramework {
 	public function get_screen_options() {
 		$screen = get_current_screen();
 
-		if ( ! is_object( $screen ) || $screen->id !== self::$admin_page ) {
+		if ( ! is_object( $screen ) || WordPressScreenOptionsDemo::$admin_page !== $screen->id ) {
 			return;
 		}
 
 		// Loop through all the options and add a screen option for each.
-		foreach ( $this->options() as $option_name ) {
+		foreach ( WordPressScreenOptionsDemo::get_instance()->options() as $option_name ) {
 			add_screen_option( "wordpress_screen_options_demo_$option_name", [
 				'option'  => $option_name,
 				'default' => true,
 				'value'   => true,
 			] );
 		}
-	}
-
-	/**
-	 * Adds an admin page.
-	 */
-	public function add_admin_page() {
-		add_menu_page(
-			esc_html__( 'WordPress Screen Options Demo Page', 'wordpress-screen-options-demo' ), // Admin page title.
-			esc_html__( 'Screen Options Demo', 'wordpress-screen-options-demo' ), // Menu title.
-			'manage_options', // Capability.
-			'screen_options_demo_page', // Page slug.
-			[ $this, 'admin_page' ], // Callback function.
-			'dashicons-lightbulb', // Icon.
-			15 // Position.
-		);
-	}
-
-	/**
-	 * Renders the admin page.
-	 */
-	public function admin_page() {
-		$screen    = get_current_screen();
-		$parent    = get_admin_page_parent();
-		$user_meta = get_usermeta( get_current_user_id(), 'wordpress_screen_options_demo_options' );
-		?>
-		<div class="wrap <?php echo esc_attr( $parent ); ?>">
-			<h1><?php echo esc_attr( get_admin_page_title() ); ?></h1>
-
-			<div class="notice notice-info is-dismissable">
-				<p>
-					<?php
-					// Translators: %s is the URL to the GitHub repository.
-					echo wp_kses_post( sprintf( __( 'This is a demonstration of the Screen Options framework. More information can be found at <a href="%s">the GitHub repo</a>. Click on the Screen Options tab in the upper right hand corner of the page to test the screen options.', 'wordpress-screen-options-demo' ), 'https://github.com/jazzsequence/WordPress-Screen-Options-Framework' ) );
-					?>
-				</p>
-			</div> <!-- .notice -->
-		</div> <!-- .<?php echo esc_attr( $parent ); ?> -->
-		<div class="<?php echo esc_attr( $parent ); ?>-body">
-			<h2><?php esc_html_e( 'Screen option values', 'wordpress-screen-options-demo' ); ?></h2>
-			<div class="description">
-				<?php if ( $user_meta ) : ?>
-					<p>
-						<?php esc_html_e( 'Screen Options have been saved to user meta. Displaying the user settings below.', 'wordpress-screen-options-demo' ); ?>
-					</p>
-				<?php else : ?>
-					<p>
-						<?php esc_html_e( 'Screen Options have not yet been saved for this user. Displaying the default settings below.', 'wordpress-screen-options-demo' ); ?>
-					</p>
-				<?php endif; ?>
-			</div>
-			<ul class="screen-options-list">
-				<?php
-				foreach ( $this->options() as $option_name ) {
-					$option     = "wordpress_screen_options_demo_$option_name";
-					if ( $user_meta ) {
-						$user_value = isset( $user_meta[ $option_name ] ) ? 'true' : 'false';
-					} else {
-						$user_value = var_export( $screen->get_option( $option, 'value' ), true );
-					}
-					?>
-					<li class="<?php echo esc_attr( $option_name ); ?>-option">
-						<strong><?php echo esc_attr( ucwords( $option_name ) ); ?>:</strong> <code><?php echo esc_html( $user_value ); ?></code>
-					</li>
-				<?php } ?>
-			</ul>
-		</div>
-		<?php
-
 	}
 
 	/**
@@ -262,7 +168,7 @@ class WordPressScreenOptionsFramework {
 	 * @return string         The filtered screen options block.
 	 */
 	public function show_screen_options( $status, $args ) {
-		if ( self::$admin_page !== $args->base ) {
+		if ( WordPressScreenOptionsDemo::$admin_page !== $args->base ) {
 			return $status;
 		}
 
@@ -295,4 +201,5 @@ class WordPressScreenOptionsFramework {
 	}
 }
 
-add_action( 'plugins_loaded', array( 'WordPressScreenOptionsFramework', 'get_instance' ) );
+// Fire it up!
+WordPressScreenOptionsFramework::get_instance();
