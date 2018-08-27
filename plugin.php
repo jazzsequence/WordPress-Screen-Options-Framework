@@ -160,6 +160,11 @@ class WordPressScreenOptionsDemo {
 	}
 }
 
+/**
+ * Wrapper function for the WordPressScreenOptionsDemo class.
+ *
+ * @return object The WordPressScreenOptionsDemo class instance.
+ */
 function wp_screen_options_demo() {
 	return new WordPressScreenOptionsDemo();
 }
