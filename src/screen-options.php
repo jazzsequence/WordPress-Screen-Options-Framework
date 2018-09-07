@@ -147,14 +147,14 @@ class WordPressScreenOptionsFramework {
 
 		// Check if the screen options have been saved. If so, use the saved value. Otherwise, use the default values.
 		if ( $user_meta ) {
-			$checked = array_key_exists( $option, $user_meta ) ? 'checked="checked"' : '';
+			$checked = array_key_exists( $option, $user_meta );
 		} else {
-			$checked = $screen->get_option( $id, 'value' ) ? 'checked="checked"' : '';
+			$checked = $screen->get_option( $id, 'value' );
 		}
 
 		?>
 
-		<label for="<?php echo esc_textarea( $id ); ?>"><input type="checkbox" name="wordpress_screen_options_demo[<?php echo esc_textarea( $option ); ?>]" class="wordpress-screen-options-demo" id="<?php echo esc_textarea( $id ); ?>" <?php echo esc_textarea( $checked ); ?> /> <?php echo esc_html( $title ); ?></label>
+		<label for="<?php echo esc_textarea( $id ); ?>"><input type="checkbox" name="wordpress_screen_options_demo[<?php echo esc_textarea( $option ); ?>]" class="wordpress-screen-options-demo" id="<?php echo esc_textarea( $id ); ?>" <?php checked( $checked ); ?>/> <?php echo esc_html( $title ); ?></label>
 
 		<?php
 	}
