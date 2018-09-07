@@ -185,7 +185,7 @@ class WordPressScreenOptionsFramework {
 	/**
 	 * Save the screen option setting.
 	 *
-	 * @param string $status No idea. Not used. No one can tell me what it does.
+	 * @param string $status The default value for the filter. Using anything other than false assumes you are handling saving the option.
 	 * @param string $option The option name.
 	 * @param array  $value  Whatever option you're setting.
 	 */
