@@ -149,7 +149,7 @@ class WordPressScreenOptionsFramework {
 		if ( $user_meta ) {
 			$checked = array_key_exists( $option, $user_meta );
 		} else {
-			$checked = $screen->get_option( $id, 'value' );
+			$checked = $screen->get_option( $id, 'value' ) ? true : false;
 		}
 
 		?>
